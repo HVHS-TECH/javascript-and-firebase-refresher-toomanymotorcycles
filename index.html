@@ -2,14 +2,30 @@
 <html>
 
 <head>
-    <title>JavaScript and Firebase refresher</title>
+    <title id="header">JavaScript and Firebase refresher</title>
+    <style>
+        #errorBar {
+            background-color: red;
+            color: white;
+            padding-left: 20px;
+            position: sticky;
+            top: 0;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+    </style>
 </head>
-<script src="script.js"></script>
-
 <body>
+    <div id="errorBar">
+        <h1>!</h1>
+        <p><b>Test error, nothing to see here.</b></p>
+    </div>
 
-    <h1 id="welcomeMessage">You haven't connected the JavaScript yet</h1>
-
+    <h1 id="welcomeMessage">You haven't connected the JavaScript yet.</h1>
+    <input id="changeinput" type="text">
+    <button onclick="changebutton()">Change button!
+    </button>
     <p>Your tasks:
     <h2>JavaScript</h2>
     <ul>
@@ -42,6 +58,7 @@
     <p>You learned all this last year. You just need to remember how!<br>
         You can Google it, ask a friend, copy from last year's work, even look at <a href="https://sites.google.com/hvhs.school.nz/technology/COMP/12COMP/12-databases/br-firebase-skills">last year's notes</a>, works for you.<br>
         By the end of the week you will have Firebase going.</p>
+    <script src="script.js"></script>
 </body>
 
 </html>
