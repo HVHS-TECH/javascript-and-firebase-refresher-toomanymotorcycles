@@ -16,15 +16,19 @@
         }
     </style>
 </head>
-<body>
-    <div id="errorBar">
-        <h1>!</h1>
-        <p><b>Test error, nothing to see here.</b></p>
-    </div>
 
+<script type="module" src="systemAPI.mjs"></script>
+<script type="module" src="mainhandler.mjs"></script>
+<body>
+    <div id="errorBar" style="display:none">
+        <div><h1>!</h1></div>
+        <div><p><b id="errorText">Test error, nothing to see here.</b></p></div>
+    </div>
+    
+    <div id="content">
     <h1 id="welcomeMessage">You haven't connected the JavaScript yet.</h1>
     <input id="changeinput" type="text">
-    <button onclick="changebutton()">Change button!
+    <button onclick="saveToBase(document.getElementById('changeinput').value)">Change button!
     </button>
     <p>Your tasks:
     <h2>JavaScript</h2>
@@ -58,6 +62,7 @@
     <p>You learned all this last year. You just need to remember how!<br>
         You can Google it, ask a friend, copy from last year's work, even look at <a href="https://sites.google.com/hvhs.school.nz/technology/COMP/12COMP/12-databases/br-firebase-skills">last year's notes</a>, works for you.<br>
         By the end of the week you will have Firebase going.</p>
+    </div>
     <script src="script.js"></script>
 </body>
 
