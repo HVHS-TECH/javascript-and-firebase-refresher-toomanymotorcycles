@@ -27,9 +27,13 @@
     
     <div id="content">
     <h1 id="welcomeMessage">You haven't connected the JavaScript yet.</h1>
+    <button id="accButton" onclick="accHandler()">Login</button><p id="loginMsg">Not logged in. Posting as anonymous user.</p>
     <input id="changeinput" type="text">
-    <button onclick="saveToBase(document.getElementById('changeinput').value)">Change button!
-    </button>
+    <button onclick="update(document.getElementById('changeinput').value)">Send!</button>
+    <button onclick="retrieveFromBase()">Update!</button>
+    <br>
+    <div id="messages"></div>
+    <br>
     <p>Your tasks:
     <h2>JavaScript</h2>
     <ul>
