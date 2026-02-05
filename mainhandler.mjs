@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
-import { getFirestore, collection as col, addDoc, getDoc as get, getDocs as getm, query, orderBy, limit, Timestamp, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+import { getFirestore, collection as col, addDoc, getDoc as get, getDocs as getm, query, orderBy, limit, onSnapshot as onSnap, Timestamp, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider,  signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 import { showError } from "./systemAPI.mjs";
 
@@ -21,6 +21,7 @@ const IPfetch = await fetch('https://api.ipify.org?format=json');
 const IPdata = await IPfetch.json();
 // Initialize Firebase
 var app, analytics, auth, google, db, initialised = false;
+globalThis.user = undefined;
 
 try {
     console.info("-------------------------------------\n--- CHAOS DATABASE SOLUTIONS V1.0 ---\n------ COPYRIGHT OF CHAOS INC. ------\n-------------------------------------");
@@ -42,8 +43,13 @@ try {
 };
 
 async function update(input) {
-    await saveToBase(input,globalThis.user.displayName);
-    retrieveFromBase();
+    if (globalThis.user == undefined) {
+        saveToBase(input);
+    } else if (globalThis.user.displayName = "Joshua Kessell-Haak") {
+        saveToBase(input,"<span style='color:goldenrod; text-shadow:1px 1px 11px'>The Administrator</span>").then(retrieveFromBase); 
+    } else {
+        saveToBase(input,user.displayName); 
+    }
 }
 
 async function login() {
@@ -51,7 +57,11 @@ async function login() {
     signInWithPopup(auth,google).then((result) => {
         globalThis.user = result.user;
         document.getElementById("accButton").innerHTML = "Logout";
-        document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}`;
+        if (result.user.displayName = "Joshua Kessell-Haak") {
+            document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}. <b>The system is at your command, Administrator.</b>`; 
+        } else {
+            document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}`;
+        }
         console.log(`CDS: Sign in complete. Signed in as ${result.user.displayName}`);
     }).catch((err) => {
         console.warn(`-!- CDS ERROR -!-\nAuthentication FAILED\n${err}`);
@@ -74,9 +84,10 @@ async function accHandler() {
 }
 
 async function saveToBase(input,sender) {
+    document.getElementById("changeinput").value = "";
     if (sender == undefined) {sender = "Anonymous"};
     try {
-        const newinput = addDoc(col(db,"messages"),{
+        await addDoc(col(db,"messages"),{
             message: input,
             sender: sender,
             timestamp: serverTimestamp()
@@ -85,7 +96,8 @@ async function saveToBase(input,sender) {
             //event: `Message sent from ${IPdata.ip}.`,
             //timestamp: serverTimestamp()
         //});
-        console.log(`CDS: Message saved to database with ID ${newinput.id}`);
+        console.log(`CDS: Message saved to database.`);
+        return Promise.resolve();
     } catch(err) {
         //addDoc(col(db,"events"),{
             //event: `Attempt to send message from ${IPdata.ip} failed.`,
@@ -93,6 +105,7 @@ async function saveToBase(input,sender) {
         //});
         showError("Message did not save.",err,false);
         console.warn(`-!- CDS ERROR -!-\nMessage save FAILED\n${err}`);
+        return Promise.reject();
     }
 }
 
@@ -104,6 +117,7 @@ async function retrieveFromBase() {
         //});
         var retrievedData = [];
         var loadedMsg;
+        var loadedMsgs = [];
         console.log("CDS: Retrieval in progress, please wait...");
         const snap = await getm(query(col(db,"messages"),orderBy("timestamp", "desc")));
         console.log("CDS: Retrieval complete. Updating site...");
@@ -111,12 +125,17 @@ async function retrieveFromBase() {
             retrievedData.push({id:doc.id,data:doc.data()});
         });
         console.log("CDS: ", retrievedData);
-        document.getElementById("welcomeMessage").innerHTML = retrievedData[0].data.message;
         for (var i=0;i<retrievedData.length;i++) {
             console.log("CDS: Loading message...");
-            loadedMsg = document.createElement('p');
-            loadedMsg.innerHTML = `<b>${retrievedData[i].data.sender}:</b>\n${retrievedData[i].data.message}\n\n${retrievedData[i].data.timestamp}`;
-            document.getElementById("messages").appendChild(loadedMsg);
+            console.log("CES: ",Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate()))
+            loadedMsg = document.createElement('div');
+            loadedMsg.className = "message";
+            loadedMsg.innerHTML = `<p style=";padding-bottom:-10px"><b>${retrievedData[i].data.sender}:</b><br>${retrievedData[i].data.message}</p><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}</p>`;
+            loadedMsgs.push(loadedMsg);
+        }
+        document.getElementById("messages").innerHTML = "";
+        for (var i=0;i<loadedMsgs.length;i++) {
+            document.getElementById("messages").appendChild(loadedMsgs[i]);
         }
         console.log("CDS: Update complete. Request completed.");
         //addDoc(col(db,"events"),{
@@ -128,17 +147,20 @@ async function retrieveFromBase() {
             //event: `Retrieval request from ${IPdata.ip} failed.`,
             //timestamp: serverTimestamp()
         //});
-        showError("Retrieval from database failed.",err,false);
+        //showError("Retrieval from database failed.",err,false);
         console.warn(`-!- CDS ERROR -!-\nRetrieval FAILED\n${err}`);
     }
 }
 
+
 globalThis.update = update;
 globalThis.retrieveFromBase = retrieveFromBase;
 globalThis.accHandler = accHandler;
-retrieveFromBase();
+
+const realtimeUpdater = onSnap(col(db,"messages"),retrieveFromBase);
+
 } catch {
     document.getElementById("content").remove();
-    showError("You blocked my security trackers, no site for you.","",true);
+    showError("Access denied - security tracker failed to load","",true);
     console.error(`-!- SECURITY LOCKOUT -!-\nDatabase connection refused and site content deleted.`);
 }

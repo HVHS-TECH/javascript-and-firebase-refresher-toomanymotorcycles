@@ -2,8 +2,13 @@
 <html>
 
 <head>
-    <title id="header">JavaScript and Firebase refresher</title>
+    <title id="header">Chaos Chat</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
     <style>
+        html {
+          font-family: Arial, Helvetica, sans-serif;
+          padding: 0px;
+        }
         #errorBar {
             background-color: red;
             color: white;
@@ -13,6 +18,44 @@
             display: flex;
             gap: 20px;
             align-items: center;
+            width:100%;
+        }
+        #accBar {
+            position: sticky;
+            top: 0;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0.5px 0px 5px 10px rgba(0, 0, 0, 0.2);
+            width:100%;
+            margin-top: -10px;
+            margin-left: -10px;
+        }
+        #postUI {
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            bottom: 0;
+            padding: 20px;
+            padding-left: 1%;
+            background-color: white;
+            box-shadow: -0.5px 0px 5px 10px rgba(0, 0, 0, 0.2);
+            width:100%;
+            margin-left: -10px;
+        }
+        .message {
+            border: 1px solid black;
+            border-radius: 5px;
+            margin: 10px;
+            padding-left: 10px;
+            box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);
+        }
+        #changeinput {
+            border: 0px;
+            border-radius: 5px;
+            width: 96%;
+            padding: 5px;
+            box-shadow: inset 2px 2px 5px 0.2px rgba(0, 0, 0, 0.2);
+            margin-left: -20px;
         }
     </style>
 </head>
@@ -21,21 +64,28 @@
 <script type="module" src="mainhandler.mjs"></script>
 <body>
     <div id="errorBar" style="display:none">
-        <div><h1>!</h1></div>
+        <div><h1 id="errorSymbol">!</h1></div>
         <div><p><b id="errorText">Test error, nothing to see here.</b></p></div>
     </div>
     
     <div id="content">
-    <h1 id="welcomeMessage">You haven't connected the JavaScript yet.</h1>
-    <button id="accButton" onclick="accHandler()">Login</button><p id="loginMsg">Not logged in. Posting as anonymous user.</p>
-    <input id="changeinput" type="text">
-    <button onclick="update(document.getElementById('changeinput').value)">Send!</button>
-    <button onclick="retrieveFromBase()">Update!</button>
+    <div id="accBar">
+        <img src="/banner.png" width="200" height="100">
+        <button id="accButton" onclick="accHandler()" style="align-self:right;">Login</button><p id="loginMsg" style="align-self:left;">Not logged in. Posting as anonymous user.</p>
+    </div>
     <br>
-    <div id="messages"></div>
+    <div id="messages"><i>Loading...</i></div>
     <br>
-    <p>Your tasks:
-    <h2>JavaScript</h2>
+    <br>
+    <br>
+    the cake is a lie
+    <div id="postUI">
+        <input id="changeinput" type="text" placeholder="Type here to chat, hit enter to send">
+    </div>
+    <!-- <div class="dropdown">
+    <p><b>Assignment Instructions</b></p>
+        <div class="dropdown-content">
+            <h2>JavaScript</h2>
     <ul>
         <li>Connect the JavaScript file - this page will tell you when it is done</li>
         <li>Add a button - Make it change the heading "You pressed the button!" </li>
@@ -66,8 +116,9 @@
     <p>You learned all this last year. You just need to remember how!<br>
         You can Google it, ask a friend, copy from last year's work, even look at <a href="https://sites.google.com/hvhs.school.nz/technology/COMP/12COMP/12-databases/br-firebase-skills">last year's notes</a>, works for you.<br>
         By the end of the week you will have Firebase going.</p>
+        </div>-->
     </div>
-    <script src="script.js"></script>
+    <script>document.getElementById("changeinput").addEventListener("keypress", (event) => {if (event.key === "Enter") {event.preventDefault();update(document.getElementById('changeinput').value)}})</script>
 </body>
 
 </html>
