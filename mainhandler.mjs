@@ -45,8 +45,10 @@ try {
 async function update(input) {
     if (globalThis.user == undefined) {
         saveToBase(input);
-    } else if (globalThis.user.displayName = "Joshua Kessell-Haak") {
-        saveToBase(input,"<span style='color:goldenrod; text-shadow:1px 1px 11px'>The Administrator</span>").then(retrieveFromBase); 
+    } else if (globalThis.user.email == "23110jk@hvhs.school.nz") {
+        saveToBase(input,"<span style='color:goldenrod; text-shadow:1px 1px 11px'>The Administrator</span>"); 
+    } else if (globalThis.user.email == "jkessellhaak@gmail.com") {
+        saveToBase(input,"<span style='color:darkred; text-shadow:1px 1px 11px'>Mr. Explosive, Lord of Chaos</span>");
     } else {
         saveToBase(input,user.displayName); 
     }
@@ -57,8 +59,11 @@ async function login() {
     signInWithPopup(auth,google).then((result) => {
         globalThis.user = result.user;
         document.getElementById("accButton").innerHTML = "Logout";
-        if (result.user.displayName = "Joshua Kessell-Haak") {
+        console.log(globalThis.user.email)
+        if (globalThis.user.email == "23110jk@hvhs.school.nz") {
             document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}. <b>The system is at your command, Administrator.</b>`; 
+        } else if (globalThis.user.email == "jkessellhaak@gmail.com") {
+            document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}. <b>All hail thee, Lord of Chaos. The system is at your command.</b>`; 
         } else {
             document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}`;
         }
@@ -70,6 +75,7 @@ async function login() {
 async function logout() {
     console.log("CDS: Signing out...");
     signOut(auth).then(() => {
+        globalThis.user = undefined;
         document.getElementById("accButton").innerHTML = "Login";
         document.getElementById("loginMsg").innerHTML = "Not logged in. Posting as anonymous user.";
         console.log("CDS: Sign out complete.")
