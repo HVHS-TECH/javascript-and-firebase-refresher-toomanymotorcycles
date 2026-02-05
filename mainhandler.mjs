@@ -63,7 +63,7 @@ async function login() {
         if (globalThis.user.email == "23110jk@hvhs.school.nz") {
             document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}. <b>The system is at your command, Administrator.</b>`; 
         } else if (globalThis.user.email == "jkessellhaak@gmail.com") {
-            document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}. <b>All hail thee, Lord of Chaos. The system is at your command.</b>`; 
+            document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}. <b>All hail thee, Supreme Lord of Chaos. The system is at your command.</b>`; 
         } else {
             document.getElementById("loginMsg").innerHTML = `Currently logged in as ${result.user.displayName}`;
         }
