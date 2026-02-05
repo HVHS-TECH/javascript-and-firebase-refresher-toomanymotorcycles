@@ -48,7 +48,7 @@ async function update(input) {
     } else if (globalThis.user.email == "23110jk@hvhs.school.nz") {
         saveToBase(input,"<span style='color:goldenrod; text-shadow:1px 1px 11px'>The Administrator</span>"); 
     } else if (globalThis.user.email == "jkessellhaak@gmail.com") {
-        saveToBase(input,"<span style='color:darkred; text-shadow:1px 1px 11px'>Mr. Explosive, Lord of Chaos</span>");
+        saveToBase(input,"<span style='color:darkred; text-shadow:1px 1px 11px'>Mr. Explosive, Supreme Lord of Chaos</span>");
     } else {
         saveToBase(input,user.displayName); 
     }
