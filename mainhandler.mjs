@@ -46,11 +46,11 @@ async function update(input) {
     if (globalThis.user == undefined) {
         saveToBase(input);
     } else if (globalThis.user.email == "23110jk@hvhs.school.nz") {
-        saveToBase(input,"<span style='color:goldenrod; text-shadow:1px 1px 11px'>The Administrator</span>"); 
+        saveToBase(input,"<span style='color:goldenrod; text-shadow:1px 1px 11px'>The Administrator</span>",globalThis.user.uid); 
     } else if (globalThis.user.email == "jkessellhaak@gmail.com") {
-        saveToBase(input,"<span style='color:darkred; text-shadow:1px 1px 11px'>Mr. Explosive, Supreme Lord of Chaos</span>");
+        saveToBase(input,"<span style='color:darkred; text-shadow:1px 1px 11px'>Mr. Explosive, Supreme Lord of Chaos</span>",globalThis.user.uid);
     } else {
-        saveToBase(input,user.displayName); 
+        saveToBase(input,user.displayName,globalThis.user.uid); 
     }
 }
 
@@ -90,13 +90,15 @@ async function accHandler() {
     if (globalThis.user == undefined) {login()} else {logout()}
 }
 
-async function saveToBase(input,sender) {
+async function saveToBase(input,sender,uid) {
     document.getElementById("changeinput").value = "";
     if (sender == undefined) {sender = "Anonymous"};
+    if (uid == undefined) {uid = 0};
     try {
         await addDoc(col(db,"messages"),{
             message: input,
             sender: sender,
+            uid: uid,
             timestamp: serverTimestamp()
         });
         var newMsg = document.createElement('div'), newEntry = document.createElement('li');
