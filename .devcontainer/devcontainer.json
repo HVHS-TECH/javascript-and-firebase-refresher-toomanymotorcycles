@@ -13,15 +13,15 @@
         },
         "vscode": {
             "extensions": [
-                "ritwickdey.LiveServer",  //  Install LiveServer to view pages
+                "ritwickdey.LiveServer"  //  Install LiveServer to view pages
             ],
             "settings": {
                 "liveServer.settings.donotShowInfoMsg": true,
                 "files.exclude": {
                     ".devcontainer/*": true,
                     ".devcontainer": true,
-                    "README.md": true,
-                },
+                    "README.md": true
+                }
             }
         }
     }

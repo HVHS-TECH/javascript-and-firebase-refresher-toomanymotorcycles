@@ -5,9 +5,43 @@
     <title id="header">Chaos Chat</title>
     <link rel="icon" type="image/png" href="./favicon.png">
     <style>
+        @keyframes accButtonAnim1 {
+            from {background-color: #ffc078;}
+            to {background-color: #ffb157;}
+        }
+        @keyframes accButtonAnim2 {
+            from {background-color: #ffb157;}
+            to {background-color: #ffc078;;}
+        }
+        @keyframes msgHover {
+            from {box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);}
+            to {box-shadow: 4px 4px 10px 1px rgba(0, 0, 0, 0.3);}
+        }
+        @keyframes msgHoverStop {
+            from {box-shadow: 4px 4px 10px 1px rgba(0, 0, 0, 0.3);}
+            to {box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);}
+        }
+        @keyframes deleteHover {
+            from {background-color: rgb(197, 197, 197);}
+            to {background-color: rgb(247, 158, 158);}
+        }
+        @keyframes deleteHoverStop {
+            from {background-color: rgb(247, 158, 158);}
+            to {background-color: rgb(197, 197, 197);}
+        }
+        @keyframes deleteConfirmation {
+            from {background-position: 100%;}
+            to {background-position: 0%;}
+        }
+
         html {
           font-family: Arial, Helvetica, sans-serif;
           padding: 0px;
+        }
+        ul, ol {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
         }
         #errorBar {
             background-color: red;
@@ -22,6 +56,10 @@
         }
         #accBar {
             position: sticky;
+            display: grid;
+            grid-template-areas:
+                'banner1 . banner2'
+                'search search search';
             top: 0;
             padding: 20px;
             background-color: white;
@@ -29,6 +67,19 @@
             width:100%;
             margin-top: -10px;
             margin-left: -10px;
+        }
+        #loginBox {
+            display: grid;
+            border: 1px solid black;
+            border-radius: 5px;
+            margin: 30px;
+            padding: 10px;
+            padding-bottom: 20px;
+            box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);
+            grid-template-areas:
+                'text text text'
+                '. login .'
+            ;
         }
         #postUI {
             position: fixed;
@@ -42,20 +93,113 @@
             width:100%;
             margin-left: -10px;
         }
+        #searchBar {
+            margin-left: 10px;
+            grid-area: search;
+        }
+        #accButton {
+            grid-area: login;
+            background-color: #ffc078;
+            color: #382a1b;
+            border: 1px solid black;
+            border-radius: 5px;
+            animation: accButtonAnim2 100ms;
+        }
+        #accButton:hover {
+            background-color: #ffb157;
+            color: #382a1b;
+            border: 1px solid black;
+            border-radius: 5px;
+            animation: accButtonAnim1 100ms;
+        }
         .message {
+            display: grid;
+            grid-template-areas: 
+            '. delete'
+            '. delete'
+            '. delete'
+            ;
             border: 1px solid black;
             border-radius: 5px;
             margin: 10px;
             padding-left: 10px;
             box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);
+            animation: msgHoverStop 100ms;
         }
-        #changeinput {
+        .pendingMessage {
+            display: grid;
+            grid-template-areas: 
+            '. delete'
+            '. delete'
+            '. delete'
+            ;
+            border: 0px;
+            background-color: darkgray;
+            border-radius: 5px;
+            margin: 10px;
+            padding-left: 10px;
+        }
+        .message button {
+            display: "none";
+        }
+        .message:hover {
+            box-shadow: 4px 4px 10px 1px rgba(0, 0, 0, 0.3);
+            animation: msgHover 100ms;
+        }
+        .message:hover button {
+            display: "block";
+        }
+        .textbox {
             border: 0px;
             border-radius: 5px;
             width: 96%;
             padding: 5px;
             box-shadow: inset 2px 2px 5px 0.2px rgba(0, 0, 0, 0.2);
-            margin-left: -20px;
+            margin-left: -30px;
+            background-color: #ffc078;
+            color: #382a1b;
+        }
+        .deleteButton {
+            background-color: rgb(197, 197, 197);
+            color: white;
+            border: 0px;
+            border-radius: 5px;
+            width: 100px;
+            grid-area: delete;
+            justify-self: right;
+            animation: deleteHoverStop 0.5s;
+        }
+        .uselessButton {
+            background-color: white;
+            color: white;
+            border: 0px;;
+            border-radius: 5px;
+            width: 100px;
+            grid-area: delete;
+            justify-self: right;
+        }
+        .deletedButton {
+            background-color: darkgrey;
+            color: rgb(197, 197, 197);
+            border: 0px;
+            border-radius: 5px;
+            width: 100px;
+            grid-area: delete;
+            justify-self: right;
+        }
+        .deleteButton:hover {
+            background-color: rgb(247, 158, 158);
+            color: white;
+            border-radius: 5px;
+            animation: deleteHover 0.5s;
+        }
+        .deleteButton:active {
+            background-image: linear-gradient(to right, rgb(252, 96, 96) 0%, rgb(252, 96, 96) 50%, rgb(247, 158, 158) 50%, rgb(247, 158, 158) 100%);
+            background-size: 200% 100%;
+            background-position: 0%;
+            color: red;
+            border-radius: 5px;
+            animation: deleteConfirmation 2s;
         }
     </style>
 </head>
@@ -70,17 +214,19 @@
     
     <div id="content">
     <div id="accBar">
-        <img src="./banner.png" width="200" height="100">
-        <button id="accButton" onclick="accHandler()" style="align-self:right;">Login</button><p id="loginMsg" style="align-self:left;">Not logged in. Posting as anonymous user.</p>
+        <img style="grid-area: banner1;" src="./banner.png" width="200" height="100">
+        <img style="grid-area: banner2; justify-self: right; margin-right: 30px;" src="./banner2.png" width="200" height="100">
+        <div id="loginBox"><button id="accButton" onclick="accHandler()">Login</button><p id="loginMsg" style="grid-area: text; text-align: center;">Not logged in. Posting as anonymous user.</p></div>
+        <input id="searchBar" class="textbox" type="text" placeholder="Search..." onkeyup="searchSystem()">
     </div>
     <br>
-    <div id="messages"><i>Loading...</i></div>
+    <div><ul id="messages"><i>Loading...</i></ul></div>
     <br>
     <br>
     <br>
     <p style="color:gray;font-size: x-small;"><i>the cake is a lie</i></p>
     <div id="postUI">
-        <input id="changeinput" type="text" placeholder="Type here to chat, hit enter to send">
+        <input id="changeinput" class="textbox" type="text" placeholder="Type here to chat, hit enter to send">
     </div>
     <!-- <div class="dropdown">
     <p><b>Assignment Instructions</b></p>
