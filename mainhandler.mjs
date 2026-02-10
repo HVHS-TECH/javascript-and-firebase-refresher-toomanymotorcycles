@@ -43,14 +43,19 @@ try {
 };
 
 async function update(input) {
+    var enteredInput = input;
+    var recipient = "";
+    if (input.substring(0,4) == "{TO:") {recipient = input.split("}",2)[0].substring(4,input.length-1), console.log(input.split("}",2)), enteredInput = input.split("}",2)[1]};
+    console.log(enteredInput);
+    console.log(recipient);
     if (globalThis.user == undefined) {
-        saveToBase(input);
+        saveToBase(enteredInput,undefined,undefined,recipient);
     } else if (globalThis.user.email == "23110jk@hvhs.school.nz") {
-        saveToBase(input,"<span style='color:goldenrod; text-shadow:1px 1px 11px'>The Administrator</span>",globalThis.user.uid); 
+        saveToBase(enteredInput,"<span style='color:goldenrod; text-shadow:1px 1px 11px'>The Administrator</span>",globalThis.user.uid,recipient); 
     } else if (globalThis.user.email == "jkessellhaak@gmail.com") {
-        saveToBase(input,"<span style='color:darkred; text-shadow:1px 1px 11px'>Mr. Explosive, Supreme Lord of Chaos</span>",globalThis.user.uid);
+        saveToBase(enteredInput,"<span style='color:darkred; text-shadow:1px 1px 11px'>Mr. Explosive, Supreme Lord of Chaos</span>",globalThis.user.uid,recipient);
     } else {
-        saveToBase(input,user.displayName,globalThis.user.uid); 
+        saveToBase(enteredInput,user.displayName,globalThis.user.uid,recipient); 
     }
 }
 
@@ -87,17 +92,20 @@ async function logout() {
 }
 
 async function accHandler() {
-    if (globalThis.user == undefined) {login()} else {logout()}
+    if (globalThis.user == undefined) {login()} else {logout()};
 }
 
-async function saveToBase(input,sender,uid) {
+async function saveToBase(input,sender,uid,recipient) {
     document.getElementById("changeinput").value = "";
+    console.log(recipient)
     if (sender == undefined) {sender = "Anonymous"};
     if (uid == undefined) {uid = 0};
+    if (recipient == "") {recipient="PUBLIC"};
     try {
         await addDoc(col(db,"messages"),{
             message: input,
             sender: sender,
+            recipient: recipient,
             uid: uid,
             timestamp: serverTimestamp()
         });
@@ -132,11 +140,11 @@ async function deleteFromBase(id) {
             document.querySelector(`[data-entry-id=${id}`).className = "pendingMessage";
             document.querySelector(`[data-entry-id=${id}`).childNodes[2].className = "deletedButton";
             document.querySelector(`[data-entry-id=${id}`).childNodes[2].innerHTML = "<h1>...<\h1>";
-            console.log(`CDS: Message deleted.`);
+            consol.log(`CDS: Message deleted.`);
             return Promise.resolve();
         } catch(err) {
             showError("Deletion failed.",err,false);
-            console.warn(`-!- CDS ERROR -!-\nMessage deletion FAILED\n${err}`);
+            console.warn(`-!- CDS ERROR -!-\nMessage deletion FAILED\n${err}\n\nThere is a chance that this may be an attempt to delete the same message twice for whatever reason, which SHOULD be impossible, but apparently isn't and I have no idea how to fix it.`);
             return Promise.reject();
         }
     },2000);
@@ -190,9 +198,9 @@ async function retrieveFromBase() {
             loadedMsg.className = "message";
             loadedMsg.setAttribute('data-entry-id', retrievedData[i].id);
             if (status == "ADMIN" || status == retrievedData[i].data.sender) {
-                loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}</p></span><button class="deleteButton" onmousedown="deleteFromBase('${retrievedData[i].id}')" onmouseup="deletionCancel()"><h1 style="font-size:40px">X</h1></button>`;
+                loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}, Recipient: ${retrievedData[i].data.recipient}</p></span><button class="deleteButton" onmousedown="deleteFromBase('${retrievedData[i].id}')" onmouseup="deletionCancel()"><h1 style="font-size:40px">X</h1></button>`;
             } else {
-                loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}</p></span><button class="uselessButton" disabled><h1 style="font-size:40px">Y</h1></button>`;
+                loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}, Recipient: ${retrievedData[i].data.recipient}</p></span><button class="uselessButton" disabled><h1 style="font-size:40px">Y</h1></button>`;
             }
             loadedMsgs.push(loadedMsg);
         }

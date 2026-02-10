@@ -4,7 +4,7 @@ console.log("CES: Initialising...")
 function showError(errorinput,errordesc,fatal) {
     if (fatal == true) {console.error("CES: A fatal error has occurred.");document.getElementById("errorSymbol").innerHTML="!?"} else {console.warn("CES: An error has occurred.");document.getElementById("errorSymbol").innerHTML="!"};
     document.getElementById("errorBar").removeAttribute("style");
-    document.getElementById("errorText").innerHTML = `${errorinput} \n ${errordesc}`
+    document.getElementById("errorText").innerHTML = `${errorinput} \n ${errordesc} \n <i>Click bar to acknowledge...</i>`;
 }
 
 export { showError };
