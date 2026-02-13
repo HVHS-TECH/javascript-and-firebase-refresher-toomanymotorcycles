@@ -198,10 +198,27 @@ async function retrieveFromBase() {
             loadedMsg.className = "message";
             loadedMsg.setAttribute('data-entry-id', retrievedData[i].id);
             if (globalThis.user != undefined && retrievedData[i].data.recipient == globalThis.user.displayName) {loadedMsg.setAttribute("style","background-color:#ffc078; border: 5px solid #ffb157")};
-            if (status == "ADMIN" || status == retrievedData[i].data.sender) {
-                loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}, @: ${retrievedData[i].data.recipient}</p></span><button class="deleteButton" onmousedown="deleteFromBase('${retrievedData[i].id}')" onmouseup="deletionCancel()"><h1 style="font-size:40px">X</h1></button>`;
-            } else {
-                loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}, @: ${retrievedData[i].data.recipient}</p></span><button class="uselessButton" disabled><h1 style="font-size:40px">Y</h1></button>`;
+            switch (retrievedData[i].data.recipient) {
+                case "None":
+                    if (status == "ADMIN" || status == retrievedData[i].data.sender) {
+                        loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}</p></span><button class="deleteButton" onmousedown="deleteFromBase('${retrievedData[i].id}')" onmouseup="deletionCancel()"><h1 style="font-size:40px">X</h1></button>`;
+                    } else {
+                        loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}</p></span><button class="uselessButton" disabled><h1 style="font-size:40px">Y</h1></button>`;
+                    }
+                    break;
+                case "SERVICE MESSAGE":
+                    if (status == "ADMIN" || status == retrievedData[i].data.sender) {
+                        loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}, <b>SERVICE MESSAGE</b></p></span><button class="deleteButton" onmousedown="deleteFromBase('${retrievedData[i].id}')" onmouseup="deletionCancel()"><h1 style="font-size:40px">X</h1></button>`;
+                    } else {
+                        loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}, <b>SERVICE MESSAGE</b></p></span><button class="uselessButton" disabled><h1 style="font-size:40px">Y</h1></button>`;
+                    }
+                    break;
+                default:
+                    if (status == "ADMIN" || status == retrievedData[i].data.sender) {
+                        loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}, @${retrievedData[i].data.recipient}</p></span><button class="deleteButton" onmousedown="deleteFromBase('${retrievedData[i].id}')" onmouseup="deletionCancel()"><h1 style="font-size:40px">X</h1></button>`;
+                    } else {
+                        loadedMsg.innerHTML = `<p style="padding-bottom:-10px;"><span id="usrEntry"><b>${retrievedData[i].data.sender}</span>:</b><br><span id="msgEntry">${retrievedData[i].data.message}</span></p><span id="dteEntry"><p style="font-size:12px;line-height:0%">${Intl.DateTimeFormat('en-GB',{dateStyle: "short", timeStyle: "short", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).format(retrievedData[i].data.timestamp.toDate())}, @${retrievedData[i].data.recipient}</p></span><button class="uselessButton" disabled><h1 style="font-size:40px">Y</h1></button>`;
+                    }
             }
             loadedMsgs.push(loadedMsg);
         }
