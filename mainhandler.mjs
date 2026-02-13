@@ -140,7 +140,7 @@ async function deleteFromBase(id) {
             document.querySelector(`[data-entry-id=${id}`).className = "pendingMessage";
             document.querySelector(`[data-entry-id=${id}`).childNodes[2].className = "deletedButton";
             document.querySelector(`[data-entry-id=${id}`).childNodes[2].innerHTML = "<h1>...<\h1>";
-            consol.log(`CDS: Message deleted.`);
+            console.log(`CDS: Message deleted.`);
             return Promise.resolve();
         } catch(err) {
             showError("Deletion failed.",err,false);
